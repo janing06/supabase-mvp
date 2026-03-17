@@ -6,21 +6,30 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "biome check .",
-    "format": "biome format --write .",
+    "ts:check": "tsc -p ./tsconfig.app.json --noEmit",
+    "lint": "biome lint --diagnostic-level=error --no-errors-on-unmatched",
+    "lint:fix": "biome lint --write --no-errors-on-unmatched",
+    "format": "biome format --write --no-errors-on-unmatched",
     "ci": "biome ci .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fsd": "steiger ./src",
+    "knip": "knip -c knip.config.jsonc",
+    "check-all": "npm run ts:check && npm run lint && npm run fsd && npm run knip"
   },
   "dependencies": {
+    "@feature-sliced/steiger-plugin": "^0.5.7",
+    "knip": "^5.87.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.9.1",
+    "steiger": "^0.5.11"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",
-    "@biomejs/biome": "^2.2.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.0"
   }
