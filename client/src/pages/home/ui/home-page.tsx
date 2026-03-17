@@ -1,4 +1,4 @@
-import { useTasks } from '@entities/task'
+import { useTasks } from '../model/hooks'
 
 export const HomePage = () => {
   const { data, isLoading, error } = useTasks()

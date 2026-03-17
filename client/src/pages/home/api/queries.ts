@@ -1,4 +1,4 @@
-import { listTasks } from '@shared/lib/supabase/supabaseClient'
+import { listTasks } from '@pages/home/api/listTasks'
 import { queryOptions } from '@tanstack/react-query'
 
 export const taskQueries = {
