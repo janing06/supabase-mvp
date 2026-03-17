@@ -1,3 +1,21 @@
+name: '[supabase] PR checks'
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'supabase/**'
+  pull_request:
+    paths:
+      - 'supabase/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./supabase
+
+
 jobs:
   pr-check:
     runs-on: ubuntu-latest
