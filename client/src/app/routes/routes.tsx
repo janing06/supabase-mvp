@@ -8,6 +8,6 @@ export const routes: RouteObject[] = [
     children: [
       { path: paths.home, element: <HomePage /> },
       { path: paths.notFound, element: <NotFoundPage /> },
-    ]
+    ],
   },
 ]
