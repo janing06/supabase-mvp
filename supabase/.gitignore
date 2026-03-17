@@ -1,2 +1,7 @@
+# Supabase local runtime
 .branches/
-.env 
+.local/
+.temp/
+
+# Environment secrets
+.env
