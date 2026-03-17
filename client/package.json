@@ -14,7 +14,14 @@
     "preview": "vite preview",
     "fsd": "steiger ./src",
     "knip": "knip -c knip.config.jsonc",
-    "check-all": "npm run ts:check && npm run lint && npm run fsd && npm run knip"
+    "check-all": "npm run ts:check && npm run lint && npm run fsd && npm run knip",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "npm run lint:fix",
+      "npm run format"
+    ]
   },
   "dependencies": {
     "@feature-sliced/steiger-plugin": "^0.5.7",
@@ -30,6 +37,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",
+    "lint-staged": "^16.4.0",
     "typescript": "~5.9.3",
     "vite": "^8.0.0"
   }
