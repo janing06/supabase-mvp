@@ -16,7 +16,7 @@
     "knip": "knip -c knip.config.jsonc",
     "check-all": "npm run ts:check && npm run lint && npm run fsd && npm run knip",
     "lint-staged": "lint-staged",
-    "generate-types": "supabase gen types typescript --local > src/shared/lib/supabase/types.ts"
+    "gen:types": "supabase gen types typescript --local > src/shared/lib/supabase/generated/types.ts"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
