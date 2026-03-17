@@ -43,7 +43,9 @@ jobs:
           node-version: 20
 
       - name: Install Supabase CLI
-        run: npm install supabase
+        run: |
+          curl -L https://github.com/supabase/cli/releases/latest/download/supabase_$(uname -s)_amd64.tar.gz | tar xz
+          sudo mv supabase /usr/local/bin/
 
       - name: Start Supabase
         run: |
