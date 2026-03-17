@@ -1,0 +1,57 @@
+name: '[supabase] PR checks'
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'supabase/**'
+  pull_request:
+    paths:
+      - 'supabase/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./supabase
+
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Supabase CLI
+        run: |
+          curl -L https://github.com/supabase/cli/releases/latest/download/supabase_$(uname -s)_amd64.tar.gz | tar xz
+          sudo mv supabase /usr/local/bin/
+
+      - name: Start Supabase
+        run: |
+          supabase init
+          supabase start
+
+      - name: Apply migrations to local DB
+        run: |
+          supabase db push --local
