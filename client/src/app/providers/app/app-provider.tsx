@@ -1,6 +1,10 @@
+import { client, queryClient } from '@shared/lib'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { ReactNode } from 'react'
 import { Suspense } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { SupabaseProvider } from './supabase-provider.tsx/supabase-provider'
 
 type AppProviderProps = {
   children: ReactNode
@@ -9,7 +13,12 @@ type AppProviderProps = {
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Router>{children}</Router>
+      <QueryClientProvider client={queryClient}>
+        <SupabaseProvider client={client}>
+          <Router>{children}</Router>
+        </SupabaseProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </Suspense>
   )
 }
