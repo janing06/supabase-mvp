@@ -52,7 +52,6 @@ jobs:
           supabase init
           supabase start
 
-      - name: Apply migrations
+      - name: Apply migrations to local DB
         run: |
-          cd supabase
-          supabase db push
+          supabase db push --local
