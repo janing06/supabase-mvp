@@ -8,12 +8,14 @@
     "@features/*": ["src/features/*"]
   },
   "ignore": [
-    "steiger.config.ts"
+    "steiger.config.ts",
+    "src/shared/lib/supabase/generated/types.ts"
     // List currently unused shared components here
     // TODO: Remove them here once they'll already be used
   ],
   "ignoreDependencies": [
     "@feature-sliced/steiger-plugin"
     // List currently unused dependencies here
-  ]
+  ],
+  "ignoreBinaries": ["supabase"]
 }

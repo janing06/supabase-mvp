@@ -15,7 +15,8 @@
     "fsd": "steiger ./src",
     "knip": "knip -c knip.config.jsonc",
     "check-all": "npm run ts:check && npm run lint && npm run fsd && npm run knip",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "gen:types": "supabase gen types typescript --local > src/shared/lib/supabase/generated/types.ts"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [

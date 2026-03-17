@@ -4,14 +4,15 @@
   "files": {
     "includes": [
       "**",
-      "!**/node_modules/**",
-      "!**/dist/**",
-      "!**/build/**",
-      "!**/.turbo/**",
-      "!**/.next/**",
-      "!**/coverage/**",
-      "!**/.cache/**",
-      "!**/.vite/**"
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/.turbo",
+      "!**/.next",
+      "!**/coverage",
+      "!**/.cache",
+      "!**/.vite",
+      "!client/src/shared/lib/supabase/types.ts"
     ]
   },
   "formatter": {
