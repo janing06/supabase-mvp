@@ -1,9 +1,7 @@
+import type { Tables } from '@shared/lib'
 import { Check, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
-import { useState } from 'react'
 
-import { useCreateTask, useDeleteTask, useTasks, useUpdateTask } from '../model/hooks'
-
-type Filter = 'all' | 'pending' | 'completed'
+export type Filter = 'all' | 'pending' | 'completed'
 
 const FILTERS: { value: Filter; label: string }[] = [
   { value: 'all', label: 'All Tasks' },
@@ -11,64 +9,66 @@ const FILTERS: { value: Filter; label: string }[] = [
   { value: 'completed', label: 'Completed' },
 ]
 
-export const HomePage = () => {
-  const { data, isLoading, error } = useTasks()
-  const createTask = useCreateTask()
-  const updateTask = useUpdateTask()
-  const deleteTask = useDeleteTask()
+type Task = Tables<'task'>
 
-  const tasks = data ?? []
-  const errorMessage = error ? (error instanceof Error ? error.message : String(error)) : null
+type Summary = {
+  total: number
+  completed: number
+  pending: number
+}
 
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<Filter>('all')
-  const [showCreate, setShowCreate] = useState(false)
-  const [newName, setNewName] = useState('')
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [editingName, setEditingName] = useState('')
+type Toolbar = {
+  search: string
+  onSearchChange: (value: string) => void
+  filter: Filter
+  onFilterChange: (value: Filter) => void
+}
 
-  const completedCount = tasks.filter((t) => t.is_completed).length
-  const pendingCount = tasks.filter((t) => !t.is_completed).length
+type Create = {
+  show: boolean
+  onShow: () => void
+  onHide: () => void
+  name: string
+  onNameChange: (value: string) => void
+  isPending: boolean
+  onSubmit: () => void
+}
 
-  const filteredTasks = tasks
-    .filter((t) => {
-      if (filter === 'completed') return t.is_completed
-      if (filter === 'pending') return !t.is_completed
-      return true
-    })
-    .filter((t) => t.name.toLowerCase().includes(search.toLowerCase()))
+type Edit = {
+  id: number | null
+  name: string
+  onNameChange: (value: string) => void
+  onStart: (id: number, name: string) => void
+  onCancel: () => void
+  onCommit: (id: number) => void
+  isPending: boolean
+}
 
-  const handleCreate = () => {
-    const trimmed = newName.trim()
-    if (!trimmed) return
-    createTask.mutate(trimmed, {
-      onSuccess: () => {
-        setNewName('')
-        setShowCreate(false)
-      },
-    })
-  }
+type Props = {
+  tasks: Task[]
+  isLoading: boolean
+  errorMessage: string | null
+  summary: Summary
+  toolbar: Toolbar
+  create: Create
+  edit: Edit
+  onToggle: (id: number, is_completed: boolean) => void
+  onDelete: (id: number) => void
+  isDeleting: boolean
+}
 
-  const handleToggle = (id: number, is_completed: boolean) => {
-    updateTask.mutate({ id, fields: { is_completed: !is_completed } })
-  }
-
-  const startEdit = (id: number, name: string) => {
-    setEditingId(id)
-    setEditingName(name)
-  }
-
-  const cancelEdit = () => {
-    setEditingId(null)
-    setEditingName('')
-  }
-
-  const commitEdit = (id: number) => {
-    const trimmed = editingName.trim()
-    if (!trimmed) return cancelEdit()
-    updateTask.mutate({ id, fields: { name: trimmed } }, { onSuccess: cancelEdit })
-  }
-
+export const HomePage = ({
+  tasks,
+  isLoading,
+  errorMessage,
+  summary,
+  toolbar,
+  create,
+  edit,
+  onToggle,
+  onDelete,
+  isDeleting,
+}: Props) => {
   return (
     <main className="min-h-screen bg-slate-100 px-6 py-10">
       <div className="mx-auto max-w-4xl">
@@ -78,26 +78,24 @@ export const HomePage = () => {
         <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
           {/* Toolbar */}
           <div className="flex items-center gap-3 border-b px-6 py-4">
-            {/* Search */}
             <div className="relative w-56">
               <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-gray-400" />
               <input
                 className="w-full rounded-lg border bg-white py-2 pr-3 pl-9 text-sm outline-none placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
                 placeholder="Search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={toolbar.search}
+                onChange={(e) => toolbar.onSearchChange(e.target.value)}
               />
             </div>
 
-            {/* Filter tabs */}
             <div className="flex items-center gap-1">
               {FILTERS.map((f) => (
                 <button
                   key={f.value}
                   type="button"
-                  onClick={() => setFilter(f.value)}
+                  onClick={() => toolbar.onFilterChange(f.value)}
                   className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                    filter === f.value
+                    toolbar.filter === f.value
                       ? 'bg-blue-500 text-white'
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
@@ -107,10 +105,9 @@ export const HomePage = () => {
               ))}
             </div>
 
-            {/* Create button */}
             <button
               type="button"
-              onClick={() => setShowCreate(true)}
+              onClick={create.onShow}
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
               <Plus className="size-4" />
@@ -119,38 +116,32 @@ export const HomePage = () => {
           </div>
 
           {/* Inline create row */}
-          {showCreate && (
+          {create.show && (
             <div className="flex items-center gap-3 border-b bg-blue-50 px-6 py-3">
               <input
                 // biome-ignore lint/a11y/noAutofocus: intentional focus on create
                 autoFocus
                 className="flex-1 rounded-lg border border-blue-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="Task name…"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
+                value={create.name}
+                onChange={(e) => create.onNameChange(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleCreate()
-                  if (e.key === 'Escape') {
-                    setShowCreate(false)
-                    setNewName('')
-                  }
+                  if (e.key === 'Enter') create.onSubmit()
+                  if (e.key === 'Escape') create.onHide()
                 }}
-                disabled={createTask.isPending}
+                disabled={create.isPending}
               />
               <button
                 type="button"
-                onClick={handleCreate}
-                disabled={!newName.trim() || createTask.isPending}
+                onClick={create.onSubmit}
+                disabled={!create.name.trim() || create.isPending}
                 className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-opacity disabled:opacity-50"
               >
                 Add
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  setShowCreate(false)
-                  setNewName('')
-                }}
+                onClick={create.onHide}
                 className="rounded-lg p-2 text-gray-400 transition-colors hover:text-gray-600"
               >
                 <X className="size-4" />
@@ -172,12 +163,12 @@ export const HomePage = () => {
                 // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
                 <div key={i} className="my-2 h-16 animate-pulse rounded-lg bg-gray-100" />
               ))
-            ) : filteredTasks.length === 0 ? (
+            ) : tasks.length === 0 ? (
               <div className="py-16 text-center text-sm text-gray-400">
-                {search ? `No tasks matching "${search}"` : 'No tasks here.'}
+                {toolbar.search ? `No tasks matching "${toolbar.search}"` : 'No tasks here.'}
               </div>
             ) : (
-              filteredTasks.map((task) => (
+              tasks.map((task) => (
                 <div
                   key={task.id}
                   className={`flex items-center gap-4 py-4 ${task.is_completed ? 'bg-blue-50/40' : ''}`}
@@ -185,8 +176,8 @@ export const HomePage = () => {
                   {/* Checkbox */}
                   <button
                     type="button"
-                    onClick={() => handleToggle(task.id, task.is_completed)}
-                    disabled={updateTask.isPending}
+                    onClick={() => onToggle(task.id, task.is_completed)}
+                    disabled={edit.isPending}
                     className={`flex size-5 shrink-0 items-center justify-center rounded border-2 transition-colors disabled:opacity-50 ${
                       task.is_completed
                         ? 'border-blue-500 bg-blue-500'
@@ -197,18 +188,18 @@ export const HomePage = () => {
                   </button>
 
                   {/* Name / inline edit */}
-                  {editingId === task.id ? (
+                  {edit.id === task.id ? (
                     <input
                       // biome-ignore lint/a11y/noAutofocus: intentional focus on edit
                       autoFocus
                       className="flex-1 rounded-lg border border-blue-300 bg-white px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-100"
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
+                      value={edit.name}
+                      onChange={(e) => edit.onNameChange(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') commitEdit(task.id)
-                        if (e.key === 'Escape') cancelEdit()
+                        if (e.key === 'Enter') edit.onCommit(task.id)
+                        if (e.key === 'Escape') edit.onCancel()
                       }}
-                      onBlur={() => commitEdit(task.id)}
+                      onBlur={() => edit.onCommit(task.id)}
                     />
                   ) : (
                     <span
@@ -222,10 +213,10 @@ export const HomePage = () => {
 
                   {/* Actions */}
                   <div className="flex shrink-0 items-center gap-2">
-                    {editingId === task.id ? (
+                    {edit.id === task.id ? (
                       <button
                         type="button"
-                        onClick={cancelEdit}
+                        onClick={edit.onCancel}
                         className="rounded-lg bg-gray-100 p-2 text-gray-500 transition-colors hover:bg-gray-200"
                       >
                         <X className="size-4" />
@@ -233,7 +224,7 @@ export const HomePage = () => {
                     ) : (
                       <button
                         type="button"
-                        onClick={() => startEdit(task.id, task.name)}
+                        onClick={() => edit.onStart(task.id, task.name)}
                         className="rounded-lg bg-blue-50 p-2 text-blue-500 transition-colors hover:bg-blue-100"
                       >
                         <Pencil className="size-4" />
@@ -241,8 +232,8 @@ export const HomePage = () => {
                     )}
                     <button
                       type="button"
-                      onClick={() => deleteTask.mutate(task.id)}
-                      disabled={deleteTask.isPending}
+                      onClick={() => onDelete(task.id)}
+                      disabled={isDeleting}
                       className="rounded-lg bg-red-50 p-2 text-red-400 transition-colors hover:bg-red-100 disabled:opacity-50"
                     >
                       <Trash2 className="size-4" />
@@ -254,16 +245,16 @@ export const HomePage = () => {
           </div>
 
           {/* Footer */}
-          {!isLoading && tasks.length > 0 && (
+          {!isLoading && summary.total > 0 && (
             <div className="flex gap-6 border-t px-6 py-4 text-sm text-gray-500">
               <span>
-                Total Tasks: <span className="font-medium text-gray-700">{tasks.length}</span>
+                Total Tasks: <span className="font-medium text-gray-700">{summary.total}</span>
               </span>
               <span>
-                Completed: <span className="font-medium text-gray-700">{completedCount}</span>
+                Completed: <span className="font-medium text-gray-700">{summary.completed}</span>
               </span>
               <span>
-                Pending: <span className="font-medium text-gray-700">{pendingCount}</span>
+                Pending: <span className="font-medium text-gray-700">{summary.pending}</span>
               </span>
             </div>
           )}
