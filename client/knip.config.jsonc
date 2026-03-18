@@ -1,5 +1,6 @@
 {
   "paths": {
+    "@/*": ["src/*"],
     "@app/*": ["src/app/*"],
     "@entities/*": ["src/entities/*"],
     "@pages/*": ["src/pages/*"],
@@ -9,13 +10,17 @@
   },
   "ignore": [
     "steiger.config.ts",
-    "src/shared/lib/supabase/generated/types.ts"
+    "src/shared/lib/supabase/generated/types.ts",
     // List currently unused shared components here
     // TODO: Remove them here once they'll already be used
+    "src/shared/ui/**",
+    "src/shared/lib/utils.ts"
   ],
   "ignoreDependencies": [
-    "@feature-sliced/steiger-plugin"
+    "@feature-sliced/steiger-plugin",
     // List currently unused dependencies here
+    "@base-ui/react",
+    "class-variance-authority"
   ],
   "ignoreBinaries": ["supabase"]
 }

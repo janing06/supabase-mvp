@@ -34,5 +34,12 @@
       "semicolons": "asNeeded",
       "trailingCommas": "all"
     }
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowWrongLineComments": false,
+      "tailwindDirectives": true
+    }
   }
 }
