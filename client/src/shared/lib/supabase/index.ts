@@ -1,2 +1,2 @@
 export * from './generated/types'
-export { client } from './supabaseClient'
+export { supabaseClient } from './supabaseClient'

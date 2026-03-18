@@ -1,7 +1,7 @@
-import { client } from '@shared/lib'
+import { supabaseClient } from '@shared/lib'
 
 export const listTasks = async () => {
-  const { data, error } = await client
+  const { data, error } = await supabaseClient
     .from('task')
     .select('*')
     .order('created_at', { ascending: false })

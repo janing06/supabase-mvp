@@ -5,4 +5,4 @@ import type { Database } from './generated/types'
 const supabaseUrl = config.supabaseUrl
 const supabaseAnonKey = config.supabaseAnonKey
 
-export const client = createClient<Database>(supabaseUrl, supabaseAnonKey)
+export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey)

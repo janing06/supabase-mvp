@@ -1,14 +1,19 @@
-import { SupabaseProvider } from '@app/providers/app/supabase-provider.tsx/supabase-provider'
-import { client } from '@shared/lib'
-import { AppProvider } from './app/app-provider'
+import { queryClient, supabaseClient } from '@shared/lib'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { SupabaseProvider } from '@/app/providers/supabase.tsx/supabase-provider'
 import { AppRoute } from './router/react-router-dom-provider'
 
 export const Providers = () => {
   return (
-    <SupabaseProvider client={client}>
-      <AppProvider>
-        <AppRoute />
-      </AppProvider>
+    <SupabaseProvider client={supabaseClient}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <AppRoute />
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </SupabaseProvider>
   )
 }
