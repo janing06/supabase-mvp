@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useCreateTask, useDeleteTask, useTasks, useUpdateTask } from '../model/hooks'
+import { useCreateTask, useDeleteTask, useSignOut, useTasks, useUpdateTask } from '../model/hooks'
 import { type Filter, HomePage } from './home-page'
 
 export const HomePageContainer = () => {
@@ -8,6 +8,7 @@ export const HomePageContainer = () => {
   const create = useCreateTask()
   const { edit, onToggle } = useUpdateTask()
   const { onDelete, isPending: isDeleting } = useDeleteTask()
+  const signOut = useSignOut()
 
   const tasks = data ?? []
   const errorMessage = error ? (error instanceof Error ? error.message : String(error)) : null
@@ -39,6 +40,7 @@ export const HomePageContainer = () => {
       onToggle={onToggle}
       onDelete={onDelete}
       isDeleting={isDeleting}
+      signOut={signOut}
     />
   )
 }

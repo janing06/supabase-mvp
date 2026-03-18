@@ -44,6 +44,11 @@ type Edit = {
   isPending: boolean
 }
 
+type SignOut = {
+  onSignOut: () => void
+  isPending: boolean
+}
+
 type Props = {
   tasks: Task[]
   isLoading: boolean
@@ -55,6 +60,7 @@ type Props = {
   onToggle: (id: number, is_completed: boolean) => void
   onDelete: (id: number) => void
   isDeleting: boolean
+  signOut: SignOut
 }
 
 export const HomePage = ({
@@ -68,12 +74,23 @@ export const HomePage = ({
   onToggle,
   onDelete,
   isDeleting,
+  signOut,
 }: Props) => {
   return (
     <main className="min-h-screen bg-slate-100 px-6 py-10">
       <div className="mx-auto max-w-4xl">
         {/* Page title */}
-        <h1 className="mb-6 text-3xl font-bold text-gray-800">TaskFlow: To-Do List</h1>
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gray-800">TaskFlow: To-Do List</h1>
+          <button
+            type="button"
+            onClick={signOut.onSignOut}
+            disabled={signOut.isPending}
+            className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+          >
+            {signOut.isPending ? 'Signing out…' : 'Sign Out'}
+          </button>
+        </div>
 
         <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
           {/* Toolbar */}
