@@ -1,5 +1,7 @@
 import type { Tables } from '@shared/lib'
+import { paths } from '@shared/paths'
 import { Check, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export type Filter = 'all' | 'pending' | 'completed'
 
@@ -82,14 +84,22 @@ export const HomePage = ({
         {/* Page title */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-800">TaskFlow: To-Do List</h1>
-          <button
-            type="button"
-            onClick={signOut.onSignOut}
-            disabled={signOut.isPending}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
-          >
-            {signOut.isPending ? 'Signing out…' : 'Sign Out'}
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to={paths.profile}
+              className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
+            >
+              Profile
+            </Link>
+            <button
+              type="button"
+              onClick={signOut.onSignOut}
+              disabled={signOut.isPending}
+              className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            >
+              {signOut.isPending ? 'Signing out…' : 'Sign Out'}
+            </button>
+          </div>
         </div>
 
         <div className="overflow-hidden rounded-2xl bg-white shadow-sm">

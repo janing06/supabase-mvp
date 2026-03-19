@@ -1,5 +1,6 @@
 import { HomePageContainer } from '@pages/home'
 import { NotFoundPage } from '@pages/not-found'
+import { ProfilePageContainer } from '@pages/profile'
 import { SignInPageContainer } from '@pages/sign-in'
 import { SignUpPageContainer } from '@pages/sign-up'
 import { paths } from '@shared/paths'
@@ -14,6 +15,14 @@ export const routes: RouteObject[] = [
         element: (
           <RequireAuth>
             <HomePageContainer />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: paths.profile,
+        element: (
+          <RequireAuth>
+            <ProfilePageContainer />
           </RequireAuth>
         ),
       },
