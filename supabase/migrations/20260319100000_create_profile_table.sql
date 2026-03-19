@@ -2,6 +2,8 @@
 create table public.profile (
   id uuid not null references auth.users(id) on delete cascade,
   email text not null,
+  full_name text,
+  avatar_url text,
   created_at timestamp with time zone not null default now(),
   primary key (id)
 );
