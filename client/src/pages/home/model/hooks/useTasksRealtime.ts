@@ -7,7 +7,10 @@ export const useTasksRealtime = () => {
   const { user } = useUser()
 
   useEffect(() => {
+    console.log('before !user')
     if (!user) return
+
+    console.log('after !user')
 
     let channel: ReturnType<typeof supabaseClient.channel> | null = null
     let cancelled = false
