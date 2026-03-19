@@ -9,23 +9,29 @@ export const useTasksRealtime = () => {
   useEffect(() => {
     if (!user) return
 
+    let channel: ReturnType<typeof supabaseClient.channel> | null = null
+    let cancelled = false
+
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return
+
       supabaseClient.realtime.setAuth(session?.access_token ?? null)
+
+      channel = supabaseClient
+        .channel('tasks')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'task', filter: `user_id=eq.${user.id}` },
+          () => {
+            queryClient.invalidateQueries({ queryKey: ['task', 'list'] })
+          },
+        )
+        .subscribe()
     })
 
-    const channel = supabaseClient
-      .channel('tasks')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'task', filter: `user_id=eq.${user.id}` },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['task', 'list'] })
-        },
-      )
-      .subscribe()
-
     return () => {
-      supabaseClient.removeChannel(channel)
+      cancelled = true
+      if (channel) supabaseClient.removeChannel(channel)
     }
   }, [queryClient, user])
 }
