@@ -9,6 +9,10 @@ export const useTasksRealtime = () => {
   useEffect(() => {
     if (!user) return
 
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      supabaseClient.realtime.setAuth(session?.access_token ?? null)
+    })
+
     const channel = supabaseClient
       .channel('tasks')
       .on(
@@ -18,9 +22,7 @@ export const useTasksRealtime = () => {
           queryClient.invalidateQueries({ queryKey: ['task', 'list'] })
         },
       )
-      .subscribe((status, err) => {
-        console.log('[realtime] status:', status, err ?? '')
-      })
+      .subscribe()
 
     return () => {
       supabaseClient.removeChannel(channel)
