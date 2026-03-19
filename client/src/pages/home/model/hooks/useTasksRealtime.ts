@@ -18,7 +18,9 @@ export const useTasksRealtime = () => {
           queryClient.invalidateQueries({ queryKey: ['task', 'list'] })
         },
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        console.log('[realtime] status:', status, err ?? '')
+      })
 
     return () => {
       supabaseClient.removeChannel(channel)
