@@ -86,7 +86,10 @@ supabase-mvp/
 │
 └── .github/
     └── workflows/
-        └── deploy.yml              # CI/CD: run migrations + deploy edge functions
+        ├── check-pr-client.yml     # PR checks: build, TypeScript, lint, FSD validation
+        ├── check-pr-supabase.yml   # PR checks: apply migrations against a live Postgres instance
+        ├── deploy.yml              # Deploy: run migrations + deploy edge functions to Supabase
+        └── assign-author.yml       # Auto-assigns PR author
 ```
 
 ---
@@ -104,13 +107,26 @@ Hooks own their own state and expose ready-to-use functions (never raw `mutate`)
 
 ## CI/CD
 
+### PR Checks
+
+Every pull request runs automated checks before merging:
+
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| `check-pr-client.yml` | PR touching `client/**` | TypeScript type check, Biome lint, FSD architecture validation, production build |
+| `check-pr-supabase.yml` | PR touching `supabase/**` | Spins up a Postgres instance and applies all migrations to catch SQL errors early |
+
+### Deployment
+
+Merging to `main` triggers automatic deployment:
+
 | Target | Platform | Trigger |
 |--------|----------|---------|
-| React app | [Vercel](https://vercel.com) | Push to `main` (auto-configured via Vercel Git integration) |
+| React app | [Vercel](https://vercel.com) | Push to `main` (Vercel Git integration) |
 | Supabase migrations | GitHub Actions | Push to `main` when `supabase/migrations/**` changes |
 | Edge functions | GitHub Actions | Push to `main` when `supabase/functions/**` changes |
 
-The GitHub Actions workflow uses three secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, and `SUPABASE_DB_PASSWORD`.
+Required GitHub Actions secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, `SUPABASE_DB_PASSWORD`.
 
 ---
 
@@ -136,12 +152,6 @@ cd client && npm install
 
 # Start the dev server
 npm run dev
-```
-
-### Edge Functions
-
-```bash
-supabase functions serve --no-verify-jwt
 ```
 
 ### Regenerate TypeScript types after schema changes
