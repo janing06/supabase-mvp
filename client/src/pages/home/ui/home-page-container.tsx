@@ -1,10 +1,18 @@
 import { useState } from 'react'
 
-import { useCreateTask, useDeleteTask, useSignOut, useTasks, useUpdateTask } from '../model/hooks'
+import {
+  useCreateTask,
+  useDeleteTask,
+  useSignOut,
+  useTasks,
+  useTasksRealtime,
+  useUpdateTask,
+} from '../model/hooks'
 import { type Filter, HomePage } from './home-page'
 
 export const HomePageContainer = () => {
   const { data, isLoading, error } = useTasks()
+  useTasksRealtime()
   const create = useCreateTask()
   const { edit, onToggle } = useUpdateTask()
   const { onDelete, isPending: isDeleting } = useDeleteTask()
