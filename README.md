@@ -2,6 +2,8 @@
 
 A full-stack task management app built with React and Supabase, demonstrating how to build a production-ready application with authentication, real-time sync, file storage, and serverless edge functions — all on a single platform.
 
+**Live demo:** https://supabase-mvp-demo.vercel.app/
+
 ---
 
 ## Features
