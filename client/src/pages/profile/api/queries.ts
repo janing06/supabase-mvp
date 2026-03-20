@@ -1,6 +1,6 @@
-import { queryOptions } from '@tanstack/react-query'
-import { getProfile } from './getProfile'
+import { queryOptions } from '@tanstack/react-query';
+import { getProfile } from './getProfile';
 
 export const profileQueries = {
-  me: () => queryOptions({ queryKey: ['profile', 'me'], queryFn: getProfile }),
-}
+	me: () => queryOptions({ queryKey: ['profile', 'me'], queryFn: getProfile }),
+};

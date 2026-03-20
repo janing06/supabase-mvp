@@ -1,1 +1,1 @@
-export * from './ui/sign-up-page-container'
+export * from './ui/sign-up-page-container';

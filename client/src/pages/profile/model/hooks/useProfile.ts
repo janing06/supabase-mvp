@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
-import { profileQueries } from '../../api/queries'
+import { useQuery } from '@tanstack/react-query';
+import { profileQueries } from '../../api/queries';
 
-export const useProfile = () => useQuery(profileQueries.me())
+export const useProfile = () => useQuery(profileQueries.me());

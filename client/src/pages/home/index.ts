@@ -1,1 +1,1 @@
-export * from './ui/home-page-container'
+export * from './ui/home-page-container';

@@ -1,3 +1,3 @@
-export * from './useProfile'
-export * from './useUpdateProfile'
-export * from './useUploadAvatar'
+export * from './useProfile';
+export * from './useUpdateProfile';
+export * from './useUploadAvatar';
