@@ -83,7 +83,7 @@ export const HomePage = ({
 			<div className="mx-auto max-w-4xl">
 				{/* Page title */}
 				<div className="mb-6 flex items-center justify-between">
-					<h1 className="text-3xl font-bold text-gray-800">My Tasks — v2</h1>
+					<h1 className="text-3xl font-bold text-gray-800">My Tasks — v3</h1>
 					<div className="flex items-center gap-2">
 						<Link
 							to={paths.profile}
