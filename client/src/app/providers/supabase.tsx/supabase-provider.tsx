@@ -14,6 +14,13 @@ export const SupabaseProvider = ({ children, client }: Props) => {
 
 	useEffect(() => {
 		client.auth.getSession().then(({ data: { session } }) => {
+			if (session) {
+				client.auth.getUser().then(({ data: { user } }) => {
+					if (!user) {
+						client.auth.signOut();
+					}
+				});
+			}
 			setUser(session?.user ?? null);
 			setAuthLoading(false);
 		});
