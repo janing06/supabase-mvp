@@ -46,7 +46,7 @@ A full-stack task management app built with React and Supabase, demonstrating ho
 | **Edge Functions** | `upload-avatar` — a Deno serverless function that handles file uploads and profile updates |
 | **Realtime** | Postgres change subscriptions keep the task list in sync across tabs |
 | **Database Triggers** | Auto-creates a profile row when a new user signs up |
-| **Migrations** | Full version-controlled schema history via `supabase/migrations/` |
+| **Migrations** | Full version-controlled schema history via `server/migrations/` |
 
 ---
 
@@ -75,7 +75,7 @@ supabase-mvp/
 │           ├── lib/                # Supabase client, auth atoms, generated types
 │           └── paths.ts            # Centralised route constants
 │
-├── supabase/
+├── server/
 │   ├── functions/
 │   │   └── upload-avatar/          # Edge function: avatar upload + profile update
 │   └── migrations/                 # Schema history
@@ -89,7 +89,7 @@ supabase-mvp/
 └── .github/
     └── workflows/
         ├── check-pr-client.yml     # PR checks: build, TypeScript, lint, FSD validation
-        ├── check-pr-supabase.yml   # PR checks: apply migrations against a live Postgres instance
+        ├── check-pr-server.yml     # PR checks: apply migrations against a live Postgres instance
         ├── deploy.yml              # Deploy: run migrations + deploy edge functions to Supabase
         └── assign-author.yml       # Auto-assigns PR author
 ```
@@ -116,7 +116,7 @@ Every pull request runs automated checks before merging:
 | Workflow | Trigger | What it does |
 |----------|---------|--------------|
 | `check-pr-client.yml` | PR touching `client/**` | TypeScript type check, Biome lint, FSD architecture validation, production build |
-| `check-pr-supabase.yml` | PR touching `supabase/**` | Spins up a Postgres instance and applies all migrations to catch SQL errors early |
+| `check-pr-server.yml` | PR touching `server/**` | Spins up a Postgres instance and applies all migrations to catch SQL errors early |
 
 ### Deployment
 
@@ -125,8 +125,8 @@ Merging to `main` triggers automatic deployment:
 | Target | Platform | Trigger |
 |--------|----------|---------|
 | React app | [Vercel](https://vercel.com) | Push to `main` (Vercel Git integration) |
-| Supabase migrations | GitHub Actions | Push to `main` when `supabase/migrations/**` changes |
-| Edge functions | GitHub Actions | Push to `main` when `supabase/functions/**` changes |
+| Supabase migrations | GitHub Actions | Push to `main` when `server/migrations/**` changes |
+| Edge functions | GitHub Actions | Push to `main` when `server/functions/**` changes |
 
 Required GitHub Actions secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, `SUPABASE_DB_PASSWORD`.
 
