@@ -2,7 +2,19 @@
 
 A full-stack task management app built with React and Supabase, demonstrating how to build a production-ready application with authentication, real-time sync, file storage, and serverless edge functions — all on a single platform.
 
-**Live demo:** https://supabase-mvp-demo.vercel.app/
+## Environments
+
+| Environment | URL |
+|-------------|-----|
+| Dev | https://supabase-mvp-dev.vercel.app/ |
+| Prod | https://supabase-mvp-prod.vercel.app/ |
+
+### Test user
+
+| Field | Value |
+|-------|-------|
+| Email | `demo@example.com` |
+| Password | `Password1!` |
 
 ---
 
@@ -90,7 +102,8 @@ supabase-mvp/
     └── workflows/
         ├── check-pr-client.yml     # PR checks: build, TypeScript, lint, FSD validation
         ├── check-pr-supabase.yml   # PR checks: apply migrations against a live Postgres instance
-        ├── deploy.yml              # Deploy: run migrations + deploy edge functions to Supabase
+        ├── deploy.yml              # Deploy (dev): run migrations + deploy edge functions on push to `main`
+        ├── deploy-prod.yml         # Deploy (prod): run migrations + deploy edge functions on push to `release`
         └── assign-author.yml       # Auto-assigns PR author
 ```
 
@@ -117,18 +130,20 @@ Every pull request runs automated checks before merging:
 |----------|---------|--------------|
 | `check-pr-client.yml` | PR touching `client/**` | TypeScript type check, Biome lint, FSD architecture validation, production build |
 | `check-pr-supabase.yml` | PR touching `supabase/**` | Spins up a Postgres instance and applies all migrations to catch SQL errors early |
+| Vercel Preview | PR touching `client/**` | Deploys a unique preview URL for the PR so changes can be reviewed visually before merging |
 
 ### Deployment
 
 Merging to `main` triggers automatic deployment:
 
-| Target | Platform | Trigger |
-|--------|----------|---------|
-| React app | [Vercel](https://vercel.com) | Push to `main` (Vercel Git integration) |
-| Supabase migrations | GitHub Actions | Push to `main` when `supabase/migrations/**` changes |
-| Edge functions | GitHub Actions | Push to `main` when `supabase/functions/**` changes |
+| Target | Environment | Platform | Trigger |
+|--------|-------------|----------|---------|
+| React app | Dev | [Vercel](https://vercel.com) | Push to `main` (Vercel Git integration) |
+| React app | Prod | [Vercel](https://vercel.com) | Push to `release` (Vercel Git integration) |
+| Supabase migrations + edge functions | Dev | GitHub Actions (`deploy.yml`) | Push to `main` when `supabase/**` changes |
+| Supabase migrations + edge functions | Prod | GitHub Actions (`deploy-prod.yml`) | Push to `release` when `supabase/**` changes |
 
-Required GitHub Actions secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, `SUPABASE_DB_PASSWORD`.
+Required GitHub Actions secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_ID_PROD`, `SUPABASE_DB_PASSWORD_PROD`.
 
 ---
 
