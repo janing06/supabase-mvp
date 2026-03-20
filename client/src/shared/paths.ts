@@ -1,7 +1,7 @@
 export const paths = {
-  home: '/',
-  signIn: '/sign-in',
-  signUp: '/sign-up',
-  profile: '/profile',
-  notFound: '/404',
-}
+	home: '/',
+	signIn: '/sign-in',
+	signUp: '/sign-up',
+	profile: '/profile',
+	notFound: '/404',
+};

@@ -1,1 +1,1 @@
-export * from './ui/profile-page-container'
+export * from './ui/profile-page-container';

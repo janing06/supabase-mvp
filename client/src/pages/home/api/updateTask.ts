@@ -1,9 +1,17 @@
-import type { TablesUpdate } from '@shared/lib'
-import { supabaseClient as client } from '@shared/lib'
+import type { TablesUpdate } from '@shared/lib';
+import { supabaseClient as client } from '@shared/lib';
 
-export const updateTask = async (id: number, fields: Omit<TablesUpdate<'task'>, 'id'>) => {
-  const { data, error } = await client.from('task').update(fields).eq('id', id).select().single()
+export const updateTask = async (
+	id: number,
+	fields: Omit<TablesUpdate<'task'>, 'id'>,
+) => {
+	const { data, error } = await client
+		.from('task')
+		.update(fields)
+		.eq('id', id)
+		.select()
+		.single();
 
-  if (error) throw error
-  return data
-}
+	if (error) throw error;
+	return data;
+};
