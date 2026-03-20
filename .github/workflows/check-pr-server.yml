@@ -1,19 +1,19 @@
-name: '[supabase] PR checks'
+name: '[server] PR checks'
 
 on:
   push:
     branches:
       - 'main'
     paths:
-      - 'supabase/**'
+      - 'server/**'
   pull_request:
     paths:
-      - 'supabase/**'
+      - 'server/**'
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: ./supabase
+    working-directory: ./server
 
 
 jobs:
