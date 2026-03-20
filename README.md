@@ -130,6 +130,7 @@ Every pull request runs automated checks before merging:
 |----------|---------|--------------|
 | `check-pr-client.yml` | PR touching `client/**` | TypeScript type check, Biome lint, FSD architecture validation, production build |
 | `check-pr-supabase.yml` | PR touching `supabase/**` | Spins up a Postgres instance and applies all migrations to catch SQL errors early |
+| Vercel Preview | PR touching `client/**` | Deploys a unique preview URL for the PR so changes can be reviewed visually before merging |
 
 ### Deployment
 
