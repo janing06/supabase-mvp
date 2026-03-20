@@ -108,7 +108,7 @@ type Task = Tables<'task'>
 
 Regenerate after schema changes:
 ```bash
-supabase gen types typescript --local --workdir server > client/src/shared/lib/supabase/generated/types.ts
+supabase gen types typescript --local > client/src/shared/lib/supabase/generated/types.ts
 ```
 
 ### Query Keys
@@ -178,7 +178,7 @@ const { data: { user } } = await supabase.auth.getUser(token)
 
 ### Disabling Gateway JWT Verification
 
-For functions that handle their own auth, disable the gateway check in `server/config.toml`:
+For functions that handle their own auth, disable the gateway check in `supabase/config.toml`:
 
 ```toml
 [functions.<function-name>]
@@ -271,7 +271,7 @@ Required GitHub secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, `SUPABA
 
 ## Formatting & Linting
 
-Biome is the formatter and linter for the entire project including `server/functions`.
+Biome is the formatter and linter for the entire project including `supabase/functions`.
 
 ```bash
 # From client/
@@ -279,7 +279,7 @@ npm run lint:fix
 npm run format
 ```
 
-The Deno VS Code extension is scoped to `server/functions` for type checking only — Biome handles formatting everywhere.
+The Deno VS Code extension is scoped to `supabase/functions` for type checking only — Biome handles formatting everywhere.
 
 ---
 

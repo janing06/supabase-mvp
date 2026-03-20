@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'server/migrations/**'
-      - 'server/functions/**'
+      - 'supabase/migrations/**'
+      - 'supabase/functions/**'
   workflow_dispatch:
 
 jobs:
@@ -21,14 +21,14 @@ jobs:
           version: latest
 
       - name: Link Supabase project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir server
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Push migrations
-        run: supabase db push --workdir server
+        run: supabase db push
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -45,13 +45,13 @@ jobs:
           version: latest
 
       - name: Link Supabase project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir server
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Deploy upload-avatar function
-        run: supabase functions deploy upload-avatar --no-verify-jwt --workdir server
+        run: supabase functions deploy upload-avatar --no-verify-jwt
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}

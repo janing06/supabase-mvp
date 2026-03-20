@@ -13,17 +13,15 @@ export const SupabaseProvider = ({ children, client }: Props) => {
 	const setAuthLoading = useSetAtom(authLoadingAtom);
 
 	useEffect(() => {
-		const {
-			data: { subscription },
-		} = client.auth.onAuthStateChange((_event, session) => {
+		client.auth.getSession().then(({ data: { session } }) => {
 			setUser(session?.user ?? null);
 			setAuthLoading(false);
 		});
 
-		client.auth.getUser().then(({ data: { user } }) => {
-			if (!user) {
-				client.auth.signOut();
-			}
+		const {
+			data: { subscription },
+		} = client.auth.onAuthStateChange((_event, session) => {
+			setUser(session?.user ?? null);
 		});
 
 		return () => subscription.unsubscribe();
