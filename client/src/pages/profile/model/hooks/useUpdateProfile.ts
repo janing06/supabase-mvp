@@ -6,7 +6,10 @@ import { z } from 'zod';
 import { updateProfile } from '../../api/updateProfile';
 
 const schema = z.object({
-	full_name: z.string().min(1, 'Name is required'),
+	full_name: z
+		.string()
+		.min(1, 'Name is required')
+		.max(100, 'Name must be 100 characters or fewer'),
 });
 
 type Inputs = z.infer<typeof schema>;
