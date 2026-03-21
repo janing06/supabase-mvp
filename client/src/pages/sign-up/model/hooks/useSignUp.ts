@@ -9,15 +9,21 @@ import { signUp } from '../../api/signUp';
 
 const schema = z
 	.object({
-		email: z.string().email('Enter a valid email'),
+		email: z
+			.string()
+			.email('Enter a valid email')
+			.max(254, 'Email must be 254 characters or fewer'),
 		password: z
 			.string()
 			.min(8, 'Password must be at least 8 characters')
 			.regex(/[A-Z]/, 'Must contain at least one uppercase letter')
 			.regex(/[a-z]/, 'Must contain at least one lowercase letter')
 			.regex(/[0-9]/, 'Must contain at least one number')
-			.regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
-		confirmPassword: z.string(),
+			.regex(/[^A-Za-z0-9]/, 'Must contain at least one special character')
+			.max(128, 'Password must be 128 characters or fewer'),
+		confirmPassword: z
+			.string()
+			.max(128, 'Confirm password must be 128 characters or fewer'),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Passwords do not match',
