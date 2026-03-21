@@ -112,6 +112,7 @@ export const HomePage = ({
 								placeholder="Search"
 								value={toolbar.search}
 								onChange={(e) => toolbar.onSearchChange(e.target.value)}
+								maxLength={200}
 							/>
 						</div>
 
@@ -157,6 +158,7 @@ export const HomePage = ({
 									if (e.key === 'Escape') create.onHide();
 								}}
 								disabled={create.isPending}
+								maxLength={100}
 							/>
 							<button
 								type="button"
@@ -233,6 +235,7 @@ export const HomePage = ({
 												if (e.key === 'Escape') edit.onCancel();
 											}}
 											onBlur={() => edit.onCommit(task.id)}
+											maxLength={100}
 										/>
 									) : (
 										<span
