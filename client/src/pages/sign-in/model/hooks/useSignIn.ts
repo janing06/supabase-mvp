@@ -8,8 +8,14 @@ import { z } from 'zod';
 import { signIn } from '../../api/signIn';
 
 const schema = z.object({
-	email: z.string().email('Enter a valid email'),
-	password: z.string().min(1, 'Password is required'),
+	email: z
+		.string()
+		.email('Enter a valid email')
+		.max(254, 'Email must be 254 characters or fewer'),
+	password: z
+		.string()
+		.min(1, 'Password is required')
+		.max(128, 'Password must be 128 characters or fewer'),
 });
 
 type Inputs = z.infer<typeof schema>;
