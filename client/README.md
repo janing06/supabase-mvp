@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# Supabase MVP — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React frontend for the Supabase MVP project.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Tool | Purpose |
+|------|---------|
+| [React 19](https://react.dev) | UI framework |
+| [TypeScript](https://www.typescriptlang.org) | Type safety |
+| [Vite](https://vitejs.dev) | Build tool and dev server |
+| [React Router v7](https://reactrouter.com) | Client-side routing |
+| [TanStack React Query](https://tanstack.com/query) | Server state, caching, and cache invalidation |
+| [Jotai](https://jotai.org) | Global auth state (atoms) |
+| [react-hook-form](https://react-hook-form.com) + [Zod](https://zod.dev) | Form handling and validation |
+| [Tailwind CSS v4](https://tailwindcss.com) | Utility-first styling |
+| [shadcn/ui](https://ui.shadcn.com) | UI component primitives |
+| [Lucide React](https://lucide.dev) | Icons |
+| [Biome](https://biomejs.dev) | Linting and formatting |
+| [Claude Code](https://claude.ai/claude-code) | AI-assisted development |
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Follows **Feature-Sliced Design (FSD)** with a **container/presentation** pattern:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  app/          # Providers, router, root setup
+  pages/        # Feature pages (home, profile, sign-in, sign-up)
+    <page>/
+      api/      # Supabase queries and mutations
+      model/
+        hooks/  # Business logic hooks
+      ui/       # Presentation components
+      index.ts  # Public export
+  shared/       # Shared utilities, types, paths, Supabase client
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Container** (`*-page-container.tsx`) — composes hooks, owns data and logic
+- **Presentation** (`*-page.tsx`) — pure UI, receives everything via props
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the development server |
+| `npm run build` | Production build |
+| `npm run lint:fix` | Lint and auto-fix with Biome |
+| `npm run format` | Format with Biome |
+| `npm run gen:types` | Regenerate Supabase TypeScript types |
