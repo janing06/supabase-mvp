@@ -46,6 +46,7 @@ A full-stack task management app built with React and Supabase, demonstrating ho
 | [shadcn/ui](https://ui.shadcn.com) | UI component primitives |
 | [Lucide React](https://lucide.dev) | Icons |
 | [Biome](https://biomejs.dev) | Linting and formatting |
+| [Claude Code](https://claude.ai/claude-code) | AI-assisted development |
 
 ### Backend — Supabase
 
